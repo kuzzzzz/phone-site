@@ -1,0 +1,200 @@
+:root {
+  --bg-start: #6a11cb;
+  --bg-end: #2575fc;
+  --card-bg: rgba(255, 255, 255, 0.15);
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.85);
+  --button-bg: #ffffff;
+  --button-text: #2575fc;
+  --button-alt-bg: rgba(255, 255, 255, 0.2);
+  --button-alt-text: #ffffff;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --border: rgba(255, 255, 255, 0.28);
+}
+
+body.dark {
+  --bg-start: #0f172a;
+  --bg-end: #1d4ed8;
+  --card-bg: rgba(15, 23, 42, 0.7);
+  --text: #e2e8f0;
+  --muted: #cbd5e1;
+  --button-bg: #e2e8f0;
+  --button-text: #1d4ed8;
+  --button-alt-bg: rgba(148, 163, 184, 0.22);
+  --button-alt-text: #e2e8f0;
+  --shadow: 0 12px 36px rgba(2, 6, 23, 0.45);
+  --border: rgba(148, 163, 184, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 20px;
+  color: var(--text);
+}
+
+.app-shell {
+  width: min(100%, 440px);
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.8s ease;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(1.45rem, 4vw, 1.9rem);
+}
+
+.subtitle {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.message {
+  margin: 10px 0 12px;
+  padding: 12px;
+  min-height: 76px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  line-height: 1.35;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+button {
+  border: none;
+  padding: 11px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease, background 0.2s ease;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+button.primary {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+button:not(.primary) {
+  background: var(--button-alt-bg);
+  color: var(--button-alt-text);
+}
+
+button[aria-pressed="true"] {
+  background: #16a34a;
+  color: #f0fdf4;
+}
+
+.controls {
+  margin-top: 14px;
+  text-align: left;
+  display: grid;
+  gap: 8px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.saved {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.saved h2 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+#savedList {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.status {
+  min-height: 18px;
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 420px) {
+  .card {
+    padding: 22px 18px;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
