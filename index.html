@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a href="https://kuzzzzz.github.io/history.html#phone-site" target="_blank" rel="noopener" aria-label="View the development history of this project" style="position:fixed;top:12px;right:12px;z-index:50;padding:8px 13px;border-radius:999px;background:rgba(0,0,0,.28);color:#fff;border:1px solid rgba(255,255,255,.35);font:600 .72rem Poppins,sans-serif;text-decoration:none;backdrop-filter:blur(8px);">↔ View history</a>
   <main class="app-shell" aria-labelledby="app-title">
     <section class="card" id="box" aria-live="polite">
       <header>
@@ -18,35 +19,13 @@
         <h1 id="app-title">Tap to Reveal 🎉</h1>
         <p class="subtitle">A little encouragement for your day.</p>
       </header>
-
       <p id="output" class="message" tabindex="0">Press reveal to get a message 👇</p>
-
-      <div class="button-row">
-        <button id="revealBtn" class="primary" type="button">Reveal</button>
-        <button id="copyBtn" type="button">Copy</button>
-        <button id="saveBtn" type="button" aria-pressed="false">Save</button>
-      </div>
-
-      <div class="controls">
-        <label class="toggle-row" for="noRepeatToggle">
-          <input id="noRepeatToggle" type="checkbox" checked>
-          <span>No repeats until all messages are shown</span>
-        </label>
-        <label class="toggle-row" for="themeToggle">
-          <input id="themeToggle" type="checkbox">
-          <span>Dark mode</span>
-        </label>
-      </div>
-
-      <section class="saved" aria-labelledby="saved-title">
-        <h2 id="saved-title">Saved messages</h2>
-        <ul id="savedList"></ul>
-      </section>
-
+      <div class="button-row"><button id="revealBtn" class="primary" type="button">Reveal</button><button id="copyBtn" type="button">Copy</button><button id="saveBtn" type="button" aria-pressed="false">Save</button></div>
+      <div class="controls"><label class="toggle-row" for="noRepeatToggle"><input id="noRepeatToggle" type="checkbox" checked><span>No repeats until all messages are shown</span></label><label class="toggle-row" for="themeToggle"><input id="themeToggle" type="checkbox"><span>Dark mode</span></label></div>
+      <section class="saved" aria-labelledby="saved-title"><h2 id="saved-title">Saved messages</h2><ul id="savedList"></ul></section>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
   </main>
-
   <script src="app.js" defer></script>
 </body>
 </html>
