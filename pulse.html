@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A quick daily log for mood, energy, and focus.">
+  <title>Pulse Log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .pulse-shell { max-width: 480px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .pulse-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+    .pulse-card h2 { font-size: 1rem; margin: 0 0 2px; font-weight: 500; }
+    .pulse-time { font-size: 0.8rem; opacity: 0.65; margin: 0 0 1rem; }
+    .slider-row { margin-bottom: 0.75rem; }
+    .slider-row .row-top { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px; }
+    .slider-row input[type="range"] { width: 100%; }
+    textarea { width: 100%; min-height: 54px; margin-top: 8px; font-family: inherit; font-size: 0.82rem; padding: 8px; border-radius: 8px; border: 1px solid #ccc; resize: vertical; }
+    .pulse-btn { width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px; border: none; font-weight: 500; cursor: pointer; }
+    .saved-msg { font-size: 0.75rem; text-align: center; margin: 8px 0 0; height: 14px; }
+    .section-title { font-size: 1rem; font-weight: 500; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+    .export-btn { font-size: 0.75rem; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; background: none; cursor: pointer; }
+    .bucket { margin-bottom: 14px; }
+    .bucket-head { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 500; margin-bottom: 6px; }
+    .bucket-head .count { color: #888; font-weight: 400; }
+    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .bar-row .label { font-size: 0.7rem; opacity: 0.6; width: 44px; }
+    .bar-track { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; }
+    .bar-val { font-size: 0.7rem; opacity: 0.75; width: 24px; text-align: right; }
+    .history-row { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 0.78rem; }
+    .history-row .t { opacity: 0.6; width: 84px; flex-shrink: 0; }
+    .history-row .m { width: 70px; flex-shrink: 0; }
+    .history-row .n { opacity: 0.8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .empty-note { font-size: 0.8rem; opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <main class="pulse-shell">
+    <header style="text-align:center; margin-bottom: 1.25rem;">
+      <p class="eyebrow" style="margin:0; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; opacity:0.6;">Pulse Log</p>
+      <h1 style="margin: 4px 0 0; font-size: 1.3rem;">Quick check-in</h1>
+    </header>
+
+    <section class="pulse-card">
+      <h2>Log this moment</h2>
+      <p class="pulse-time" id="time-label"></p>
+      <div id="sliders"></div>
+      <textarea id="note" placeholder="What are you working on? (optional)"></textarea>
+      <button class="pulse-btn" id="log-btn">Log entry</button>
+      <p class="saved-msg" id="saved-msg"></p>
+    </section>
+
+    <section class="pulse-card">
+      <p class="section-title">Patterns by time of day</p>
+      <div id="chart-empty" class="empty-note" style="display:none;">Log a few entries across different times of day to see your pattern here.</div>
+      <div id="chart"></div>
+    </section>
+
+    <section class="pulse-card">
+      <p class="section-title">
+        Recent entries
+        <button class="export-btn" id="export-btn">⬇ Export CSV</button>
+      </p>
+      <div id="history"></div>
+    </section>
+  </main>
+
+  <script src="pulse.js" defer></script>
+</body>
+</html>
