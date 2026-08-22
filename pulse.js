@@ -170,6 +170,72 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
+function parseCsv(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const parseLine = (line) => {
+    const cells = [];
+    let cur = '', inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (inQuotes) {
+        if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { cur += c; }
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ',') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur);
+    return cells;
+  };
+  const header = parseLine(lines[0]).map(h => h.trim());
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const cells = parseLine(line);
+    const obj = {};
+    header.forEach((h, i) => { obj[h] = cells[i]; });
+    return {
+      timestamp: obj.timestamp,
+      hour: Number(obj.hour),
+      mood: Number(obj.mood),
+      energy: Number(obj.energy),
+      focus: Number(obj.focus),
+      note: obj.note || ''
+    };
+  });
+}
+
+function importCsvFile(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const msg = document.getElementById('import-msg');
+    try {
+      const imported = parseCsv(reader.result);
+      if (imported.length === 0) throw new Error('empty');
+      const existing = loadEntries();
+      const seen = new Set(existing.map(e => e.timestamp));
+      let added = 0;
+      imported.forEach(e => {
+        if (e.timestamp && !seen.has(e.timestamp)) {
+          existing.push(e);
+          seen.add(e.timestamp);
+          added++;
+        }
+      });
+      saveEntries(existing);
+      msg.style.color = '#2fa89a';
+      msg.textContent = `Imported ${added} new ${added === 1 ? 'entry' : 'entries'} (${imported.length - added} already present, skipped).`;
+      renderAll();
+    } catch (err) {
+      msg.style.color = '#c0392b';
+      msg.textContent = "Couldn't read that file — make sure it's a CSV exported from Pulse Log.";
+    }
+  };
+  reader.readAsText(file);
+}
+
 function renderAll() {
   const entries = loadEntries().slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   renderChart(entries);
@@ -180,4 +246,12 @@ renderSliders();
 timeLabel();
 document.getElementById('log-btn').addEventListener('click', logEntry);
 document.getElementById('export-btn').addEventListener('click', exportCsv);
+document.getElementById('import-btn').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+document.getElementById('import-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) importCsvFile(file);
+  e.target.value = '';
+});
 renderAll();

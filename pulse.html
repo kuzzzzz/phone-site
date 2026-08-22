@@ -62,8 +62,13 @@
     <section class="pulse-card">
       <p class="section-title">
         Recent entries
-        <button class="export-btn" id="export-btn">⬇ Export CSV</button>
+        <span style="display:flex; gap:8px;">
+          <button class="export-btn" id="import-btn">⬆ Import CSV</button>
+          <button class="export-btn" id="export-btn">⬇ Export CSV</button>
+        </span>
       </p>
+      <input type="file" id="import-file" accept=".csv" style="display:none;">
+      <p class="saved-msg" id="import-msg"></p>
       <div id="history"></div>
     </section>
   </main>
