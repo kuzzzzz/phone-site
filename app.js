@@ -1,3 +1,6 @@
+const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
+const USER_ID = "phone-site-primary";
+
 const messages = [
   "Your breakthrough is closer than your birthday 🎁",
   "That stress you're carrying? It will pay you back double 💙",
@@ -34,6 +37,7 @@ let state = loadState();
 applyTheme();
 renderSavedMessages();
 syncControls();
+syncFromBackend();
 
 revealBtn.addEventListener("click", reveal);
 copyBtn.addEventListener("click", copyCurrentMessage);
@@ -57,6 +61,49 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  syncToBackend();
+}
+
+async function syncFromBackend() {
+  try {
+    const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}`);
+    const result = await response.json();
+    if (!result.ok || !Array.isArray(result.data)) return;
+
+    const remote = result.data
+      .filter(item => item.type === "boost_state")
+      .at(-1);
+
+    if (!remote || !remote.data) return;
+
+    state = {
+      ...initialState,
+      ...remote.data,
+      savedMessages: Array.isArray(remote.data.savedMessages) ? remote.data.savedMessages : [],
+      viewedIndexes: Array.isArray(remote.data.viewedIndexes) ? remote.data.viewedIndexes : []
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    applyTheme();
+    renderSavedMessages();
+    syncControls();
+  } catch (error) {
+    console.warn("Remote Daily Boost sync unavailable:", error);
+  }
+}
+
+async function syncToBackend() {
+  try {
+    const params = new URLSearchParams({
+      userId: USER_ID,
+      type: "boost_state",
+      data: JSON.stringify(state)
+    });
+
+    await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
+  } catch (error) {
+    console.warn("Remote Daily Boost save unavailable:", error);
+  }
 }
 
 function syncControls() {
