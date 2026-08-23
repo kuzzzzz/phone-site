@@ -16,6 +16,7 @@
   <nav class="site-nav" aria-label="Phone Site navigation">
     <a href="index.html" aria-current="page" class="active">Daily Boost</a>
     <a href="pulse.html">Pulse Check</a>
+    <a href="admin.html">Add Boost</a>
   </nav>
 
   <main class="app-shell" aria-labelledby="app-title">
@@ -28,8 +29,11 @@
       <div id="output" class="message" tabindex="0" aria-label="Daily Boost message">
         <div id="boostText">Press reveal to get a message 👇</div>
         <div id="boostAuthor" class="boost-author" hidden></div>
+        <a id="boostLink" class="boost-link" href="#" target="_blank" rel="noopener" hidden>Watch ↗</a>
+        <p id="repeatStats" class="repeat-stats" hidden></p>
       </div>
       <div class="button-row"><button id="revealBtn" class="primary" type="button">Reveal</button><button id="copyBtn" type="button">Copy</button><button id="saveBtn" type="button" aria-pressed="false">Save</button></div>
+      <div class="button-row secondary-row"><button id="likeBtn" type="button" aria-pressed="false">🤍 Like</button><button id="repeatBtn" type="button" aria-pressed="false">🔁 Repeat</button></div>
       <div class="controls"><label class="toggle-row" for="noRepeatToggle"><input id="noRepeatToggle" type="checkbox" checked><span>No repeats until all messages are shown</span></label><label class="toggle-row" for="themeToggle"><input id="themeToggle" type="checkbox"><span>Dark mode</span></label></div>
       <section class="saved" aria-labelledby="saved-title"><h2 id="saved-title">Saved messages</h2><ul id="savedList"></ul></section>
       <p id="status" class="status" role="status" aria-live="polite"></p>

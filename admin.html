@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Add a new item to your Daily Boost rotation.">
+  <title>Add Boost 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a href="https://kuzzzzz.github.io/history.html#phone-site" target="_blank" rel="noopener" aria-label="View the development history of this project" class="history-link">↔ View history</a>
+
+  <nav class="site-nav" aria-label="Phone Site navigation">
+    <a href="index.html">Daily Boost</a>
+    <a href="pulse.html">Pulse Check</a>
+    <a href="admin.html" aria-current="page" class="active">Add Boost</a>
+  </nav>
+
+  <main class="app-shell" aria-labelledby="app-title">
+    <section class="card">
+      <header>
+        <p class="eyebrow">Add Boost</p>
+        <h1 id="app-title">New item ✍️</h1>
+        <p class="subtitle">Add a quote, or drop a link from Twitter, TikTok, YouTube or Instagram.</p>
+      </header>
+
+      <div class="kind-toggle">
+        <button id="kindQuoteBtn" type="button" class="primary" aria-pressed="true">Quote</button>
+        <button id="kindLinkBtn" type="button" aria-pressed="false">Link</button>
+      </div>
+
+      <div id="quoteFields">
+        <div class="field-row">
+          <label for="quoteText">Quote text</label>
+          <textarea id="quoteText" placeholder="The thing that stuck with you..."></textarea>
+        </div>
+        <div class="field-row">
+          <label for="quoteAuthor">Author (optional)</label>
+          <input id="quoteAuthor" type="text" placeholder="Who said it">
+        </div>
+      </div>
+
+      <div id="linkFields" hidden>
+        <div class="field-row">
+          <label for="linkUrl">Link URL</label>
+          <input id="linkUrl" type="url" placeholder="https://...">
+        </div>
+        <div class="field-row">
+          <label for="linkCaption">Caption / note (optional)</label>
+          <textarea id="linkCaption" placeholder="Why this one's worth revisiting"></textarea>
+        </div>
+        <p id="platformHint" class="status" style="margin-top:-4px;"></p>
+      </div>
+
+      <div class="button-row" style="grid-template-columns: 1fr;">
+        <button id="submitBtn" class="primary" type="button">Add to rotation</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="admin.js" defer></script>
+</body>
+</html>
