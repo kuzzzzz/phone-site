@@ -143,30 +143,30 @@ async function loadPoolAndFeedback() {
       if (f && f.itemId) feedbackMap[f.itemId] = f;
     });
 
-  if (boostPool.length === 0) {
+  const alreadyMigrated = localStorage.getItem(SEED_FLAG_KEY) === "true";
+  if (!alreadyMigrated) {
     await seedFromLocal();
   }
 }
 
 async function seedFromLocal() {
-  const alreadyMigrated = localStorage.getItem(SEED_FLAG_KEY) === "true";
   try {
     const response = await fetch(LOCAL_SEED_URL, { cache: "no-store" });
     if (!response.ok) throw new Error(`Seed request failed: ${response.status}`);
     const days = await response.json();
+    const existingIds = new Set(boostPool.map(i => i.id));
     const seedItems = [];
     days.forEach(day => {
       (day.quotes || []).forEach(q => {
         const id = hashId(`${q.text}|${q.author || ""}`);
+        if (existingIds.has(id)) return;
         seedItems.push({ id, kind: "quote", text: q.text, author: q.author || null, source: "import", addedAt: new Date().toISOString() });
       });
     });
-    boostPool = seedItems;
 
-    if (!alreadyMigrated) {
-      localStorage.setItem(SEED_FLAG_KEY, "true");
-      seedItems.forEach(item => postBackend("boost_item", item));
-    }
+    boostPool = boostPool.concat(seedItems);
+    localStorage.setItem(SEED_FLAG_KEY, "true");
+    seedItems.forEach(item => postBackend("boost_item", item));
   } catch (error) {
     console.warn("Local seed content unavailable:", error);
   }
