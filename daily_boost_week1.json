@@ -1,0 +1,121 @@
+[
+  {
+    "day": 1,
+    "quotes": [
+      {"text":"He who loses money, loses much; He who loses a friend, loses much more; He who loses faith, loses all.","author":"Eleanor Roosevelt"},
+      {"text":"All you have to do is know where you're going. The answers will come to you of their own accord.","author":"Earl Nightingale"},
+      {"text":"Confidence on the outside begins by living with integrity on the inside.","author":"Brian Tracy"},
+      {"text":"Get a good idea and stay with it. Dog it, and work at it until it's done right.","author":"Walt Disney"},
+      {"text":"Character is like a tree and reputation like its shadow. The shadow is what we think of it; the tree is the real thing.","author":"Abraham Lincoln"},
+      {"text":"You don't get paid for the hour. You get paid for the value you bring to the hour.","author":"Jim Rohn"},
+      {"text":"Work as though you would live forever, and live as though you would die today.","author":"Og Mandino"},
+      {"text":"When one door of happiness closes, another opens.","author":"Helen Keller"},
+      {"text":"You can never solve a problem on the level on which it was created.","author":"Albert Einstein"},
+      {"text":"Worry is simply an unhealthy and destructive mental habit.","author":"Norman Vincent Peale"},
+      {"text":"When angry, count four; when very angry, swear.","author":"Mark Twain"},
+      {"text":"The freedom to be your best means nothing unless you are willing to do your best.","author":"Colin Powell"}
+    ]
+  },
+  {
+    "day": 2,
+    "quotes": [
+      {"text":"My best friend is the one who brings our the best in me.","author":"Henry Ford"},
+      {"text":"True happiness is not attained through self gratification, but through fidelity to a worthy purpose.","author":"Helen Keller"},
+      {"text":"Search for the seed of good in every adversity.","author":"Og Mandino"},
+      {"text":"Outstanding people have one thing in common: an absolute sense of mission.","author":"Zig Ziglar"},
+      {"text":"It's what you learn after you know it all that counts.","author":"John Wooden"},
+      {"text":"Our doubts are traitors, and make us lose the good we oft might win by fearing to attempt.","author":"William Shakespeare"},
+      {"text":"The successful man will profit from his mistakes and try again in a different way.","author":"Dale Carnegie"},
+      {"text":"When your desires are strong enough you will appear to possess superhuman powers to achieve.","author":"Napoleon Hill"},
+      {"text":"Leadership is the challenge to be something more than average.","author":"Jim Rohn"},
+      {"text":"It's not that I'm so smart, it's just that I stay with problems longer.","author":"Albert Einstein"},
+      {"text":"Never leave that till tomorrow which you can do today.","author":"Benjamin Franklin"},
+      {"text":"You gain strength, courage, and confidence by every experience in which you really stop to look fear in the face.","author":"Eleanor Roosevelt"}
+    ]
+  },
+  {
+    "day": 3,
+    "quotes": [
+      {"text":"You can disagree without being disagreeable.","author":"Zig Ziglar"},
+      {"text":"Our greatest natural resource is the minds of our children.","author":"Walt Disney"},
+      {"text":"A bird doesn't sing because it has an answer, it sings because it has a song.","author":"Maya Angelou"},
+      {"text":"A business that makes nothing but money is a poor kind of business.","author":"Henry Ford"},
+      {"text":"Perpetual optimism is a force multiplier.","author":"Colin Powell"},
+      {"text":"Excellence is to do a common thing in an uncommon way.","author":"Booker T. Washington"},
+      {"text":"Truthfulness is the main element of character.","author":"Brian Tracy"},
+      {"text":"Everything comes to him that hustles while he waits.","author":"Thomas Edison"},
+      {"text":"Pleasure in the job puts perfection in the work.","author":"Aristotle"},
+      {"text":"Each misfortune you encounter will carry in it the seed of tomorrow's good luck.","author":"Og Mandino"},
+      {"text":"There is nothing like returning to a place that remains unchanged to find the ways in which you yourself have altered.","author":"Nelson Mandela"},
+      {"text":"It's not whether you get knocked down; it's whether you get back up.","author":"Vince Lombardi"}
+    ]
+  },
+  {
+    "day": 4,
+    "quotes": [
+      {"text":"Where your talents and the needs of the world cross lies your calling.","author":"Aristotle"},
+      {"text":"The harder you work, the harder it is to surrender.","author":"Vince Lombardi"},
+      {"text":"The price of greatness is responsibility.","author":"Winston Churchill"},
+      {"text":"There are no secrets to success. It is the result of preparation, hard work, and learning from failure.","author":"Colin Powell"},
+      {"text":"Am I not destroying my enemies when I make friends of them?","author":"Abraham Lincoln"},
+      {"text":"Failure is the opportunity to begin again more intelligently.","author":"Henry Ford"},
+      {"text":"Let us endeavor to live so that when we come to die even the undertaker will be sorry.","author":"Mark Twain"},
+      {"text":"You never achieve real success unless you like what you are doing.","author":"Dale Carnegie"},
+      {"text":"Life is not so short but that there is always time enough for courtesy.","author":"Ralph Waldo Emerson"},
+      {"text":"The most important key to achieving great success is to decide upon your goal and launch, get started, take action, move.","author":"Brian Tracy"},
+      {"text":"Can you imagine what I would do if I could do all I can?","author":"Sun Tzu"},
+      {"text":"How you think about a problem is more important than the problem itself - so always think positively.","author":"Norman Vincent Peale"}
+    ]
+  },
+  {
+    "day": 5,
+    "quotes": [
+      {"text":"Plan for the future because that's where you are going to spend the rest of your life.","author":"Mark Twain"},
+      {"text":"Those who educate children well are more to be honored than parents, for these only gave life, those the art of living well.","author":"Aristotle"},
+      {"text":"I never did anything by accident, nor did any of my inventions come by accident; they came by work.","author":"Thomas Edison"},
+      {"text":"The best measure of a man's honesty isn't his income tax return. It's the zero adjust on his bathroom scale.","author":"Arthur C. Clarke"},
+      {"text":"Opportunities multiply as they are seized.","author":"Sun Tzu"},
+      {"text":"It is better to light one small candle than to curse the darkness.","author":"Confucius"},
+      {"text":"Success is the progressive realization of a worthy goal or ideal.","author":"Earl Nightingale"},
+      {"text":"Energy and persistence alter all things.","author":"Benjamin Franklin"},
+      {"text":"The time is always right to do what is right.","author":"Martin Luther King Jr."},
+      {"text":"For every minute you are angry you lose sixty seconds of happiness.","author":"Ralph Waldo Emerson"},
+      {"text":"You'll miss 100 per cent of the shots you never take.","author":"Wayne Gretzky"},
+      {"text":"Do what you can, with what you have, where you are.","author":"Theodore Roosevelt"}
+    ]
+  },
+  {
+    "day": 6,
+    "quotes": [
+      {"text":"Success is neither magical nor mysterious. Success is the natural consequence of consistently applying the basic fundamentals.","author":"Jim Rohn"},
+      {"text":"The greatest glory in living lies not in never failing, but in rising every time we fail.","author":"Nelson Mandela"},
+      {"text":"I have not failed. I've just found 10,000 ways that won't work.","author":"Thomas Edison"},
+      {"text":"Freedom is the last, best hope of earth.","author":"Abraham Lincoln"},
+      {"text":"It's not good enough that we do our best; sometimes we have to do what's required.","author":"Winston Churchill"},
+      {"text":"Keep your eyes on the stars and your feet on the ground.","author":"Theodore Roosevelt"},
+      {"text":"Our greatest glory is not in never falling, but in rising every time we fall.","author":"Confucius"},
+      {"text":"If you don't like something, change it. If you can't change it, change your attitude. Don't complain.","author":"Maya Angelou"},
+      {"text":"The only way to find the limits of the possible is by going beyond them to the impossible.","author":"Arthur C. Clarke"},
+      {"text":"Be humble, be big in mind and soul, be kindly; you will like yourself that way and so will other people.","author":"Norman Vincent Peale"},
+      {"text":"You don't have to fear defeat if you believe it may reveal powers that you didn't know you possessed.","author":"Napoleon Hill"},
+      {"text":"Keep your face to the sunshine and you cannot see the shadow. It's what sunflowers do.","author":"Helen Keller"}
+    ]
+  },
+  {
+    "day": 7,
+    "quotes": [
+      {"text":"Just play. Have fun. Enjoy the game.","author":"Michael Jordan"},
+      {"text":"The task ahead of us is never as great as the power behind us.","author":"Ralph Waldo Emerson"},
+      {"text":"The real glory is being knocked to your knees and then coming back. That's real glory. That's the essence of it.","author":"Vince Lombardi"},
+      {"text":"See first that the design is wise and just; that ascertained, pursue it resolutely.","author":"William Shakespeare"},
+      {"text":"Know yourself and you will win all battles.","author":"Sun Tzu"},
+      {"text":"The man who has no imagination has no wings.","author":"Muhammad Ali"},
+      {"text":"Ability may get you to the top, but it takes character to keep you there.","author":"John Wooden"},
+      {"text":"Wealth is not his that has it, but his that enjoys it.","author":"Benjamin Franklin"},
+      {"text":"The only man who makes no mistakes is the man who never does anything.","author":"Theodore Roosevelt"},
+      {"text":"What you do off the job is determining factor in how far you will go on the job.","author":"Zig Ziglar"},
+      {"text":"No one can make you jealous, angry, vengeful, or greedy - unless you let him.","author":"Napoleon Hill"},
+      {"text":"You have to expect things of yourselves before you can do them.","author":"Michael Jordan"}
+    ]
+  }
+]
