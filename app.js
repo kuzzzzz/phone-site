@@ -1,22 +1,14 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
 const USER_ID = "phone-site-primary";
-
-const messages = [
-  "Your breakthrough is closer than your birthday 🎁",
-  "That stress you're carrying? It will pay you back double 💙",
-  "Unexpected money is coming… stay ready 💸",
-  "Someone quietly respects you more than you know 🌟",
-  "Your next chapter is healing, clarity and success 💫",
-  "Your name go soon appear where it matters 🔥",
-  "Peace is coming back into your life slowly 🕊️",
-  "Your vibe is rare. Protect it ❤️",
-  "Your future self is already proud of you ✨",
-  "A sweet surprise go land this week 📩"
-];
-
+const CONTENT_URL = "./daily_boost_week1.json";
 const STORAGE_KEY = "tap-to-reveal-state";
 
+let dailyContent = [];
+let state = loadState();
+
 const output = document.getElementById("output");
+const boostText = document.getElementById("boostText");
+const boostAuthor = document.getElementById("boostAuthor");
 const status = document.getElementById("status");
 const revealBtn = document.getElementById("revealBtn");
 const copyBtn = document.getElementById("copyBtn");
@@ -26,17 +18,17 @@ const themeToggle = document.getElementById("themeToggle");
 const savedList = document.getElementById("savedList");
 
 const initialState = {
-  currentMessage: output.innerText,
+  currentMessage: { text: "Press reveal to get a message 👇" },
   savedMessages: [],
   viewedIndexes: [],
   noRepeat: true,
-  darkMode: false
+  darkMode: false,
+  currentDay: null
 };
 
-let state = loadState();
 applyTheme();
-renderSavedMessages();
 syncControls();
+loadContent();
 syncFromBackend();
 
 revealBtn.addEventListener("click", reveal);
@@ -48,20 +40,69 @@ themeToggle.addEventListener("change", toggleTheme);
 function loadState() {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    return {
-      ...initialState,
-      ...parsed,
-      savedMessages: Array.isArray(parsed.savedMessages) ? parsed.savedMessages : [],
-      viewedIndexes: Array.isArray(parsed.viewedIndexes) ? parsed.viewedIndexes : []
-    };
+    return normalizeState({ ...initialState, ...parsed });
   } catch {
     return { ...initialState };
   }
 }
 
+function normalizeQuote(value) {
+  if (typeof value === "string") return { text: value };
+  if (!value || typeof value !== "object") return { text: "" };
+  return {
+    text: String(value.text || ""),
+    ...(value.author ? { author: String(value.author) } : {})
+  };
+}
+
+function normalizeState(value) {
+  return {
+    ...initialState,
+    ...value,
+    currentMessage: normalizeQuote(value.currentMessage),
+    savedMessages: Array.isArray(value.savedMessages)
+      ? value.savedMessages.map(normalizeQuote).filter(q => q.text)
+      : [],
+    viewedIndexes: Array.isArray(value.viewedIndexes) ? value.viewedIndexes : []
+  };
+}
+
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   syncToBackend();
+}
+
+async function loadContent() {
+  try {
+    const response = await fetch(CONTENT_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Content request failed: ${response.status}`);
+    dailyContent = await response.json();
+    ensureCurrentDay();
+    syncControls();
+  } catch (error) {
+    console.warn("Daily Boost content unavailable:", error);
+    status.innerText = "Daily Boost content could not be loaded.";
+  }
+}
+
+function getDayNumber() {
+  const day = new Date().getDay();
+  return day === 0 ? 7 : day;
+}
+
+function ensureCurrentDay() {
+  const today = getDayNumber();
+  if (state.currentDay !== today) {
+    state.currentDay = today;
+    state.viewedIndexes = [];
+    state.currentMessage = { text: "Press reveal to get a message 👇" };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+}
+
+function getTodayQuotes() {
+  const day = dailyContent.find(item => Number(item.day) === Number(state.currentDay || getDayNumber()));
+  return Array.isArray(day?.quotes) ? day.quotes.map(normalizeQuote).filter(q => q.text) : [];
 }
 
 async function syncFromBackend() {
@@ -70,19 +111,12 @@ async function syncFromBackend() {
     const result = await response.json();
     if (!result.ok || !Array.isArray(result.data)) return;
 
-    const remote = result.data
-      .filter(item => item.type === "boost_state")
-      .at(-1);
+    const remote = result.data.filter(item => item.type === "boost_state" && item.data).at(-1);
+    if (!remote) return;
 
-    if (!remote || !remote.data) return;
-
-    state = {
-      ...initialState,
-      ...remote.data,
-      savedMessages: Array.isArray(remote.data.savedMessages) ? remote.data.savedMessages : [],
-      viewedIndexes: Array.isArray(remote.data.viewedIndexes) ? remote.data.viewedIndexes : []
-    };
-
+    const remoteState = normalizeState(remote.data);
+    state = normalizeState({ ...state, ...remoteState });
+    ensureCurrentDay();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     applyTheme();
     renderSavedMessages();
@@ -99,7 +133,6 @@ async function syncToBackend() {
       type: "boost_state",
       data: JSON.stringify(state)
     });
-
     await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
   } catch (error) {
     console.warn("Remote Daily Boost save unavailable:", error);
@@ -107,58 +140,77 @@ async function syncToBackend() {
 }
 
 function syncControls() {
-  output.innerText = state.currentMessage;
+  renderCurrentMessage();
   noRepeatToggle.checked = state.noRepeat;
   themeToggle.checked = state.darkMode;
+  renderSavedMessages();
   syncSaveButton();
 }
 
+function renderCurrentMessage() {
+  const quote = normalizeQuote(state.currentMessage);
+  boostText.innerText = quote.text || "Press reveal to get a message 👇";
+  if (quote.author) {
+    boostAuthor.hidden = false;
+    boostAuthor.innerText = `— ${quote.author}`;
+  } else {
+    boostAuthor.hidden = true;
+    boostAuthor.innerText = "";
+  }
+}
+
 function reveal() {
-  const idx = pickMessageIndex();
-  state.currentMessage = messages[idx];
+  const quotes = getTodayQuotes();
+  if (quotes.length === 0) {
+    status.innerText = "No Daily Boost content is available for today.";
+    return;
+  }
+
+  const idx = pickMessageIndex(quotes);
+  state.currentMessage = quotes[idx];
 
   if (state.noRepeat && !state.viewedIndexes.includes(idx)) {
     state.viewedIndexes.push(idx);
   }
 
-  output.innerText = state.currentMessage;
+  renderCurrentMessage();
   output.focus();
   syncSaveButton();
 
-  const remaining = Math.max(messages.length - state.viewedIndexes.length, 0);
-  status.innerText =
-    state.noRepeat ? `New reveal! ${remaining} unique message(s) left in this cycle.` : "New reveal!";
+  const remaining = Math.max(quotes.length - state.viewedIndexes.length, 0);
+  status.innerText = state.noRepeat
+    ? `New reveal! ${remaining} unique message(s) left today.`
+    : "New reveal!";
 
   saveState();
 }
 
-function pickMessageIndex() {
-  if (!state.noRepeat) {
-    return Math.floor(Math.random() * messages.length);
-  }
+function pickMessageIndex(quotes) {
+  if (!state.noRepeat) return Math.floor(Math.random() * quotes.length);
 
-  const unseenIndexes = messages
+  const unseenIndexes = quotes
     .map((_, i) => i)
-    .filter((i) => !state.viewedIndexes.includes(i));
+    .filter(i => !state.viewedIndexes.includes(i));
 
   if (unseenIndexes.length === 0) {
     state.viewedIndexes = [];
-    status.innerText = "Cycle complete. Starting fresh set of reveals.";
-    return Math.floor(Math.random() * messages.length);
+    status.innerText = "Today's cycle is complete. Starting a fresh set.";
+    return Math.floor(Math.random() * quotes.length);
   }
 
-  const randomSlot = Math.floor(Math.random() * unseenIndexes.length);
-  return unseenIndexes[randomSlot];
+  return unseenIndexes[Math.floor(Math.random() * unseenIndexes.length)];
 }
 
 async function copyCurrentMessage() {
-  if (!state.currentMessage) {
+  const quote = normalizeQuote(state.currentMessage);
+  if (!quote.text || quote.text.startsWith("Press reveal")) {
     status.innerText = "Nothing to copy yet.";
     return;
   }
 
+  const copyText = quote.author ? `${quote.text}\n— ${quote.author}` : quote.text;
   try {
-    await navigator.clipboard.writeText(state.currentMessage);
+    await navigator.clipboard.writeText(copyText);
     status.innerText = "Message copied to clipboard.";
   } catch {
     status.innerText = "Clipboard unavailable in this browser.";
@@ -166,16 +218,16 @@ async function copyCurrentMessage() {
 }
 
 function saveCurrentMessage() {
-  if (!state.currentMessage) {
+  const quote = normalizeQuote(state.currentMessage);
+  if (!quote.text || quote.text.startsWith("Press reveal")) {
     status.innerText = "Reveal a message first.";
     return;
   }
 
-  if (!state.savedMessages.includes(state.currentMessage)) {
-    state.savedMessages.unshift(state.currentMessage);
-    if (state.savedMessages.length > 8) {
-      state.savedMessages = state.savedMessages.slice(0, 8);
-    }
+  const exists = state.savedMessages.some(saved => saved.text === quote.text && saved.author === quote.author);
+  if (!exists) {
+    state.savedMessages.unshift(quote);
+    if (state.savedMessages.length > 8) state.savedMessages = state.savedMessages.slice(0, 8);
     renderSavedMessages();
     saveState();
     status.innerText = "Saved to your list.";
@@ -192,24 +244,30 @@ function renderSavedMessages() {
   if (state.savedMessages.length === 0) {
     const empty = document.createElement("li");
     empty.innerText = "No saved messages yet.";
-    empty.style.listStyle = "none";
-    empty.style.marginLeft = "-20px";
+    empty.className = "saved-item";
     savedList.appendChild(empty);
     return;
   }
 
-  state.savedMessages.forEach((msg) => {
+  state.savedMessages.forEach(quote => {
     const li = document.createElement("li");
-    li.innerText = msg;
+    li.className = "saved-item";
+    const text = document.createElement("span");
+    text.innerText = quote.text;
+    li.appendChild(text);
+    if (quote.author) {
+      const author = document.createElement("span");
+      author.className = "saved-author";
+      author.innerText = `— ${quote.author}`;
+      li.appendChild(author);
+    }
     savedList.appendChild(li);
   });
 }
 
 function toggleNoRepeat() {
   state.noRepeat = noRepeatToggle.checked;
-  if (!state.noRepeat) {
-    state.viewedIndexes = [];
-  }
+  if (!state.noRepeat) state.viewedIndexes = [];
   status.innerText = state.noRepeat ? "No-repeat mode on." : "No-repeat mode off.";
   saveState();
 }
@@ -225,7 +283,8 @@ function applyTheme() {
 }
 
 function syncSaveButton() {
-  const isSaved = state.savedMessages.includes(state.currentMessage);
+  const current = normalizeQuote(state.currentMessage);
+  const isSaved = state.savedMessages.some(saved => saved.text === current.text && saved.author === current.author);
   saveBtn.setAttribute("aria-pressed", String(isSaved));
   saveBtn.innerText = isSaved ? "Saved" : "Save";
 }
