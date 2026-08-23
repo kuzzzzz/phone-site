@@ -20,6 +20,7 @@ const output = document.getElementById("output");
 const boostText = document.getElementById("boostText");
 const boostAuthor = document.getElementById("boostAuthor");
 const boostLink = document.getElementById("boostLink");
+const boostLinkLabel = document.getElementById("boostLinkLabel");
 const repeatStats = document.getElementById("repeatStats");
 const status = document.getElementById("status");
 const revealBtn = document.getElementById("revealBtn");
@@ -241,6 +242,7 @@ function renderCurrentMessage() {
     boostText.innerText = "Press reveal to get a message 👇";
     boostAuthor.hidden = true;
     boostLink.hidden = true;
+    boostLinkLabel.hidden = true;
     repeatStats.hidden = true;
     return;
   }
@@ -249,7 +251,9 @@ function renderCurrentMessage() {
     boostText.innerText = item.text || "Tap to view";
     boostAuthor.hidden = !item.platform;
     if (item.platform) boostAuthor.innerText = `— via ${capitalize(item.platform)}`;
-    boostLink.hidden = !item.url;
+    const hasUrl = Boolean(item.url);
+    boostLink.hidden = !hasUrl;
+    boostLinkLabel.hidden = !hasUrl;
     if (item.url) boostLink.href = item.url;
   } else {
     boostText.innerText = item.text || "";
@@ -260,6 +264,7 @@ function renderCurrentMessage() {
       boostAuthor.hidden = true;
     }
     boostLink.hidden = true;
+    boostLinkLabel.hidden = true;
   }
 
   renderRepeatStats(item.id);
@@ -375,20 +380,41 @@ function renderSavedMessages() {
     return;
   }
 
-  state.savedMessages.forEach(item => {
+  state.savedMessages.forEach((item, index) => {
     const li = document.createElement("li");
     li.className = "saved-item";
+    const row = document.createElement("div");
+    row.className = "saved-item-row";
+    const textWrap = document.createElement("div");
+    textWrap.className = "saved-item-text";
     const text = document.createElement("span");
     text.innerText = item.text || item.url;
-    li.appendChild(text);
+    textWrap.appendChild(text);
     if (item.author) {
       const author = document.createElement("span");
       author.className = "saved-author";
       author.innerText = `— ${item.author}`;
-      li.appendChild(author);
+      textWrap.appendChild(author);
     }
+    row.appendChild(textWrap);
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "saved-remove-btn";
+    removeBtn.setAttribute("aria-label", "Remove saved message");
+    removeBtn.innerText = "✕";
+    removeBtn.addEventListener("click", () => removeSavedMessage(index));
+    row.appendChild(removeBtn);
+    li.appendChild(row);
     savedList.appendChild(li);
   });
+}
+
+function removeSavedMessage(index) {
+  state.savedMessages.splice(index, 1);
+  renderSavedMessages();
+  syncSaveButton();
+  saveState();
+  status.innerText = "Removed from saved list.";
 }
 
 function syncSaveButton() {
