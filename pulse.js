@@ -1,3 +1,5 @@
+const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
+const USER_ID = "phone-site-primary";
 const STORAGE_KEY = 'pulseLogEntries';
 
 const DIMS = [
@@ -23,8 +25,57 @@ function loadEntries() {
   }
 }
 
-function saveEntries(entries) {
+function saveEntries(entries, syncRemote = true) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  if (syncRemote) syncEntriesToBackend(entries);
+}
+
+async function syncEntriesToBackend(entries) {
+  const latest = entries[entries.length - 1];
+  if (!latest) return;
+
+  try {
+    const params = new URLSearchParams({
+      userId: USER_ID,
+      type: 'pulse_entry',
+      data: JSON.stringify(latest)
+    });
+    await fetch(`${API_URL}?${params.toString()}`, { method: 'POST' });
+  } catch (error) {
+    console.warn('Remote Pulse sync unavailable:', error);
+  }
+}
+
+async function syncFromBackend() {
+  try {
+    const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}`);
+    const result = await response.json();
+    if (!result.ok || !Array.isArray(result.data)) return;
+
+    const remoteEntries = result.data
+      .filter(item => item.type === 'pulse_entry' && item.data)
+      .map(item => item.data)
+      .filter(e => e.timestamp);
+
+    if (remoteEntries.length === 0) return;
+
+    const existing = loadEntries();
+    const merged = [...existing];
+    const seen = new Set(merged.map(e => e.timestamp));
+
+    remoteEntries.forEach(entry => {
+      if (!seen.has(entry.timestamp)) {
+        merged.push(entry);
+        seen.add(entry.timestamp);
+      }
+    });
+
+    merged.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    renderAll();
+  } catch (error) {
+    console.warn('Remote Pulse sync unavailable:', error);
+  }
 }
 
 function bucketFor(hour) {
@@ -224,7 +275,8 @@ function importCsvFile(file) {
           added++;
         }
       });
-      saveEntries(existing);
+      saveEntries(existing, false);
+      imported.forEach(e => syncSingleEntry(e));
       msg.style.color = '#2fa89a';
       msg.textContent = `Imported ${added} new ${added === 1 ? 'entry' : 'entries'} (${imported.length - added} already present, skipped).`;
       renderAll();
@@ -234,6 +286,19 @@ function importCsvFile(file) {
     }
   };
   reader.readAsText(file);
+}
+
+async function syncSingleEntry(entry) {
+  try {
+    const params = new URLSearchParams({
+      userId: USER_ID,
+      type: 'pulse_entry',
+      data: JSON.stringify(entry)
+    });
+    await fetch(`${API_URL}?${params.toString()}`, { method: 'POST' });
+  } catch (error) {
+    console.warn('Remote Pulse save unavailable:', error);
+  }
 }
 
 function renderAll() {
@@ -255,3 +320,4 @@ document.getElementById('import-file').addEventListener('change', (e) => {
   e.target.value = '';
 });
 renderAll();
+syncFromBackend();
