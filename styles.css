@@ -26,31 +26,33 @@ body.dark {
   --border: rgba(148, 163, 184, 0.35);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+
+html, body { width: 100%; min-height: 100%; }
 
 body {
   font-family: "Poppins", sans-serif;
   background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   margin: 0;
-  padding: 72px 20px 20px;
+  padding: 88px 20px 28px;
   color: var(--text);
 }
 
-/* The navigation is a floating control, not part of the card layout. */
+/* Keep navigation completely outside the card's layout. */
 body > nav {
   position: fixed;
   top: 12px;
-  left: 12px;
-  z-index: 60;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
   display: flex !important;
   gap: 6px !important;
   padding: 0 !important;
+  margin: 0 !important;
+  width: max-content;
+  max-width: calc(100vw - 24px);
   align-items: center;
 }
 
@@ -63,6 +65,7 @@ body > nav a {
 
 .app-shell {
   width: min(100%, 440px);
+  margin: 0 auto;
 }
 
 .card {
@@ -76,24 +79,9 @@ body > nav a {
   animation: fadeIn 0.8s ease;
 }
 
-.eyebrow {
-  margin: 0;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-h1 {
-  margin: 4px 0 8px;
-  font-size: clamp(1.45rem, 4vw, 1.9rem);
-}
-
-.subtitle {
-  margin: 0 0 14px;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
+.eyebrow { margin: 0; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 4px 0 8px; font-size: clamp(1.45rem, 4vw, 1.9rem); }
+.subtitle { margin: 0 0 14px; color: var(--muted); font-size: 0.92rem; }
 
 .message {
   margin: 10px 0 12px;
@@ -104,125 +92,32 @@ h1 {
   line-height: 1.35;
 }
 
-.button-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-button {
-  border: none;
-  padding: 11px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.18s ease, opacity 0.18s ease, background 0.2s ease;
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 600;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-button:focus-visible,
-input:focus-visible {
-  outline: 2px solid #facc15;
-  outline-offset: 2px;
-}
-
-button.primary {
-  background: var(--button-bg);
-  color: var(--button-text);
-}
-
-button:not(.primary) {
-  background: var(--button-alt-bg);
-  color: var(--button-alt-text);
-}
-
-button[aria-pressed="true"] {
-  background: #16a34a;
-  color: #f0fdf4;
-}
-
-.controls {
-  margin-top: 14px;
-  text-align: left;
-  display: grid;
-  gap: 8px;
-}
-
-.toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  color: var(--muted);
-}
-
-.saved {
-  margin-top: 16px;
-  text-align: left;
-}
-
-.saved h2 {
-  margin: 0 0 8px;
-  font-size: 0.95rem;
-}
-
-#savedList {
-  list-style: disc;
-  padding-left: 20px;
-  margin: 0;
-  display: grid;
-  gap: 6px;
-  font-size: 0.88rem;
-}
-
-.status {
-  min-height: 18px;
-  margin-top: 10px;
-  font-size: 0.84rem;
-  color: var(--muted);
-}
+.button-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+button { border: none; padding: 11px 12px; border-radius: 10px; cursor: pointer; transition: transform 0.18s ease, opacity 0.18s ease, background 0.2s ease; font: inherit; font-size: 0.92rem; font-weight: 600; }
+button:active { transform: scale(0.97); }
+button:focus-visible, input:focus-visible { outline: 2px solid #facc15; outline-offset: 2px; }
+button.primary { background: var(--button-bg); color: var(--button-text); }
+button:not(.primary) { background: var(--button-alt-bg); color: var(--button-alt-text); }
+button[aria-pressed="true"] { background: #16a34a; color: #f0fdf4; }
+.controls { margin-top: 14px; text-align: left; display: grid; gap: 8px; }
+.toggle-row { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: var(--muted); }
+.saved { margin-top: 16px; text-align: left; }
+.saved h2 { margin: 0 0 8px; font-size: 0.95rem; }
+#savedList { list-style: disc; padding-left: 20px; margin: 0; display: grid; gap: 6px; font-size: 0.88rem; }
+.status { min-height: 18px; margin-top: 10px; font-size: 0.84rem; color: var(--muted); }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 420px) {
-  body {
-    padding-top: 68px;
-  }
-
-  .card {
-    padding: 22px 18px;
-  }
-
-  .button-row {
-    grid-template-columns: 1fr;
-  }
-
-  body > nav a {
-    padding: 7px 10px !important;
-    font-size: 0.7rem !important;
-  }
+  body { padding: 82px 14px 24px; }
+  .card { padding: 22px 18px; }
+  .button-row { grid-template-columns: 1fr; }
+  body > nav a { padding: 7px 10px !important; font-size: 0.7rem !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-  }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
