@@ -3,6 +3,15 @@ const USER_ID = "phone-site-primary";
 const CONTENT_URL = "./daily_boost_week1.json";
 const STORAGE_KEY = "tap-to-reveal-state";
 
+const initialState = {
+  currentMessage: { text: "Press reveal to get a message 👇" },
+  savedMessages: [],
+  viewedIndexes: [],
+  noRepeat: true,
+  darkMode: false,
+  currentDay: null
+};
+
 let dailyContent = [];
 let state = loadState();
 
@@ -16,15 +25,6 @@ const saveBtn = document.getElementById("saveBtn");
 const noRepeatToggle = document.getElementById("noRepeatToggle");
 const themeToggle = document.getElementById("themeToggle");
 const savedList = document.getElementById("savedList");
-
-const initialState = {
-  currentMessage: { text: "Press reveal to get a message 👇" },
-  savedMessages: [],
-  viewedIndexes: [],
-  noRepeat: true,
-  darkMode: false,
-  currentDay: null
-};
 
 applyTheme();
 syncControls();
@@ -42,7 +42,7 @@ function loadState() {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     return normalizeState({ ...initialState, ...parsed });
   } catch {
-    return { ...initialState };
+    return normalizeState(initialState);
   }
 }
 
