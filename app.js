@@ -1,5 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
 const USER_ID = "phone-site-primary";
+const AUTH_TOKEN = "vNJedS4GV9YHLiYGszKbliHCweFRlqHu3Uqx7huV7oA";
 
 const messages = [
   "Your breakthrough is closer than your birthday 🎁",
@@ -66,7 +67,7 @@ function saveState() {
 
 async function syncFromBackend() {
   try {
-    const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}`);
+    const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}&token=${encodeURIComponent(AUTH_TOKEN)}`);
     const result = await response.json();
     if (!result.ok || !Array.isArray(result.data)) return;
 
@@ -97,7 +98,8 @@ async function syncToBackend() {
     const params = new URLSearchParams({
       userId: USER_ID,
       type: "boost_state",
-      data: JSON.stringify(state)
+      data: JSON.stringify(state),
+      token: AUTH_TOKEN
     });
 
     await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
