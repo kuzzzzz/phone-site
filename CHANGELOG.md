@@ -2,6 +2,28 @@
 
 A lightweight development log for tracking changes, bugs, rewrites, and architectural decisions.
 
+## 2026-08-25
+
+### Fixed
+- **No-repeat toggle:** `pickItem()` now respects `state.noRepeat`. When off, picks are true random and views are not recorded against the cycle list.
+- **Feedback map:** when multiple `boost_feedback` rows exist for the same item, the client keeps the one with the latest `updatedAt` instead of last-in-array only.
+
+### Changed
+- Extracted **`shared.js`**: `API_URL`, `USER_ID`, `AUTH_TOKEN`, `newId` / `hashId`, `fetchBackendRows`, `postBackend` (checks response / `ok`), shared dark-mode helpers, and an offline **outbox** that retries failed POSTs on load.
+- Daily Boost shows **“Loading boosts…”** until the pool is ready; status messages use a simple priority so cycle-complete is not immediately overwritten.
+- **Pulse Check** restyled onto shared `styles.css` (gradient glass, nav, dark mode, history link). Pulse-specific chart/slider styles live in the same stylesheet.
+- `.history-link` styles defined once in CSS (Boost / Admin / Pulse).
+- README updated to match current pages, architecture, and seed vs live content.
+
+### Data / Architecture
+- Boost UI state (`currentItem`, `savedMessages`, `viewedIds`, etc.) remains **localStorage only** — there is no remote `boost_state` write path in current code. Earlier CHANGELOG notes about `boost_state` rows on every reveal referred to a prior design and no longer apply.
+- Feedback and items still append rows on the sheet; client-side latest-by-`updatedAt` soft-upserts feedback in memory. Server-side upsert is still a desirable follow-up.
+
+### Known / Next
+- Auth token remains in client JS (intentional deferral); rotate / proxy before wider sharing.
+- Seed migration still POSTs one request per new seed item (~84 on first browser) — batching not yet built.
+- Considering batched Daily Boost delivery (set per day/week) instead of one-at-a-time through the full pool.
+
 ## 2026-08-23 (later)
 
 ### Changed
@@ -54,4 +76,3 @@ For future changes, record:
 - **Fixed** — bugs/errors resolved
 - **Data / Architecture** — persistence, API, schema, or structural changes
 - **Known / Next** — unresolved issues or planned follow-up
-
