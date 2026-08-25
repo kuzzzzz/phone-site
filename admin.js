@@ -1,7 +1,3 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
-const USER_ID = "phone-site-primary";
-const AUTH_TOKEN = "vNJedS4GV9YHLiYGszKbliHCweFRlqHu3Uqx7huV7oA";
-
 const kindQuoteBtn = document.getElementById("kindQuoteBtn");
 const kindLinkBtn = document.getElementById("kindLinkBtn");
 const quoteFields = document.getElementById("quoteFields");
@@ -15,6 +11,9 @@ const submitBtn = document.getElementById("submitBtn");
 const status = document.getElementById("status");
 
 let kind = "quote";
+
+PhoneSite.applyThemeFromStorage();
+PhoneSite.flushOutbox();
 
 kindQuoteBtn.addEventListener("click", () => setKind("quote"));
 kindLinkBtn.addEventListener("click", () => setKind("link"));
@@ -47,11 +46,11 @@ function detectPlatform(url) {
 
 function updatePlatformHint() {
   const platform = detectPlatform(linkUrl.value.trim());
-  platformHint.innerText = platform ? `Detected: ${platform}` : (linkUrl.value.trim() ? "Platform not recognized — will save as a generic link." : "");
-}
-
-function newId() {
-  return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+  platformHint.innerText = platform
+    ? `Detected: ${platform}`
+    : linkUrl.value.trim()
+      ? "Platform not recognized — will save as a generic link."
+      : "";
 }
 
 async function submit() {
@@ -64,7 +63,7 @@ async function submit() {
       return;
     }
     item = {
-      id: newId(),
+      id: PhoneSite.newId(),
       kind: "quote",
       text,
       author: quoteAuthor.value.trim() || null,
@@ -78,7 +77,7 @@ async function submit() {
       return;
     }
     item = {
-      id: newId(),
+      id: PhoneSite.newId(),
       kind: "link",
       text: linkCaption.value.trim() || null,
       url,
@@ -91,19 +90,16 @@ async function submit() {
   submitBtn.disabled = true;
   status.innerText = "Saving...";
 
-  try {
-    const params = new URLSearchParams({ userId: USER_ID, type: "boost_item", data: JSON.stringify(item), token: AUTH_TOKEN });
-    await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
+  const result = await PhoneSite.postBackend("boost_item", item);
+  if (result.ok) {
     status.innerText = "Added! It'll show up in your Daily Boost rotation.";
     quoteText.value = "";
     quoteAuthor.value = "";
     linkUrl.value = "";
     linkCaption.value = "";
     platformHint.innerText = "";
-  } catch (error) {
-    console.warn("Add boost failed:", error);
-    status.innerText = "Couldn't save — check your connection and try again.";
-  } finally {
-    submitBtn.disabled = false;
+  } else {
+    status.innerText = "Couldn't reach the server — queued to retry when you're back online.";
   }
+  submitBtn.disabled = false;
 }
