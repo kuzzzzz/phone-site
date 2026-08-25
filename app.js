@@ -1,5 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
 const USER_ID = "phone-site-primary";
+const AUTH_TOKEN = "vNJedS4GV9YHLiYGszKbliHCweFRlqHu3Uqx7huV7oA";
 const LOCAL_SEED_URL = "./daily_boost_week1.json";
 const STORAGE_KEY = "tap-to-reveal-state";
 const SEED_FLAG_KEY = "boost-seed-migrated";
@@ -104,7 +105,7 @@ function saveState() {
 
 // ---------- Backend I/O ----------
 async function fetchBackendRows() {
-  const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}`);
+  const response = await fetch(`${API_URL}?userId=${encodeURIComponent(USER_ID)}&token=${encodeURIComponent(AUTH_TOKEN)}`);
   const result = await response.json();
   if (!result.ok || !Array.isArray(result.data)) return [];
   return result.data;
@@ -112,7 +113,7 @@ async function fetchBackendRows() {
 
 async function postBackend(type, data) {
   try {
-    const params = new URLSearchParams({ userId: USER_ID, type, data: JSON.stringify(data) });
+    const params = new URLSearchParams({ userId: USER_ID, type, data: JSON.stringify(data), token: AUTH_TOKEN });
     await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
   } catch (error) {
     console.warn(`Remote ${type} save unavailable:`, error);

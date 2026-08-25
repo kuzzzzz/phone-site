@@ -28,7 +28,7 @@ async function saveNoteAsBoost() {
   };
 
   try {
-    const params = new URLSearchParams({ userId: USER_ID, type: 'boost_item', data: JSON.stringify(item) });
+    const params = new URLSearchParams({ userId: USER_ID, type: 'boost_item', data: JSON.stringify(item), token: AUTH_TOKEN });
     await fetch(`${API_URL}?${params.toString()}`, { method: 'POST' });
     boostMsg.textContent = 'Saved to Daily Boost';
     boostMsg.style.color = '#2fa89a';
@@ -332,7 +332,8 @@ async function syncSingleEntry(entry) {
     const params = new URLSearchParams({
       userId: USER_ID,
       type: 'pulse_entry',
-      data: JSON.stringify(entry)
+      data: JSON.stringify(entry),
+      token: AUTH_TOKEN
     });
     await fetch(`${API_URL}?${params.toString()}`, { method: 'POST' });
   } catch (error) {

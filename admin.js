@@ -1,5 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbypa1N6yeEjTURZE-5_krWUUdEHqDfi_pjXKRNa9YvigIAMa6ny6NSfychr8QA4gpdn/exec";
 const USER_ID = "phone-site-primary";
+const AUTH_TOKEN = "vNJedS4GV9YHLiYGszKbliHCweFRlqHu3Uqx7huV7oA";
 
 const kindQuoteBtn = document.getElementById("kindQuoteBtn");
 const kindLinkBtn = document.getElementById("kindLinkBtn");
@@ -91,7 +92,7 @@ async function submit() {
   status.innerText = "Saving...";
 
   try {
-    const params = new URLSearchParams({ userId: USER_ID, type: "boost_item", data: JSON.stringify(item) });
+    const params = new URLSearchParams({ userId: USER_ID, type: "boost_item", data: JSON.stringify(item), token: AUTH_TOKEN });
     await fetch(`${API_URL}?${params.toString()}`, { method: "POST" });
     status.innerText = "Added! It'll show up in your Daily Boost rotation.";
     quoteText.value = "";
