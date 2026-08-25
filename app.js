@@ -83,7 +83,9 @@ function normalizeQuote(value) {
     text: String(value.text || ""),
     ...(value.author ? { author: String(value.author) } : {}),
     ...(value.url ? { url: String(value.url) } : {}),
-    ...(value.platform ? { platform: String(value.platform) } : {})
+    ...(value.platform ? { platform: String(value.platform) } : {}),
+    ...(value.source ? { source: String(value.source) } : {}),
+    ...(value.loggedAt ? { loggedAt: String(value.loggedAt) } : {})
   };
 }
 
@@ -258,9 +260,10 @@ function renderCurrentMessage() {
     if (item.url) boostLink.href = item.url;
   } else {
     boostText.innerText = item.text || "";
-    if (item.author) {
+    const label = attributionLabel(item);
+    if (label) {
       boostAuthor.hidden = false;
-      boostAuthor.innerText = `— ${item.author}`;
+      boostAuthor.innerText = `— ${label}`;
     } else {
       boostAuthor.hidden = true;
     }
@@ -284,6 +287,15 @@ function renderRepeatStats(itemId) {
 
 function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function attributionLabel(item) {
+  if (item.source === "pulse" && item.loggedAt) {
+    const loggedDate = new Date(item.loggedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    return `from your pulse log, ${loggedDate}`;
+  }
+  if (item.author) return item.author;
+  return null;
 }
 
 // ---------- Feedback (like / repeat) ----------
@@ -338,7 +350,8 @@ async function copyCurrentMessage() {
   if (item.kind === "link") {
     copyText = item.text ? `${item.text}\n${item.url}` : item.url;
   } else {
-    copyText = item.author ? `${item.text}\n— ${item.author}` : item.text;
+    const label = attributionLabel(item);
+    copyText = label ? `${item.text}\n— ${label}` : item.text;
   }
 
   try {
@@ -391,10 +404,10 @@ function renderSavedMessages() {
     const text = document.createElement("span");
     text.innerText = item.text || item.url;
     textWrap.appendChild(text);
-    if (item.author) {
+    if (attributionLabel(item)) {
       const author = document.createElement("span");
       author.className = "saved-author";
-      author.innerText = `— ${item.author}`;
+      author.innerText = `— ${attributionLabel(item)}`;
       textWrap.appendChild(author);
     }
     row.appendChild(textWrap);

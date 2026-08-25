@@ -24,6 +24,7 @@ async function saveNoteAsBoost() {
     text,
     author: null,
     source: 'pulse',
+    loggedAt: new Date().toISOString(),
     addedAt: new Date().toISOString()
   };
 
