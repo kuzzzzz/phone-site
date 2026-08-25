@@ -3,6 +3,43 @@ const USER_ID = "phone-site-primary";
 const AUTH_TOKEN = "vNJedS4GV9YHLiYGszKbliHCweFRlqHu3Uqx7huV7oA";
 const STORAGE_KEY = 'pulseLogEntries';
 
+function newBoostId() {
+  return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+}
+
+async function saveNoteAsBoost() {
+  const noteEl = document.getElementById('note');
+  const text = noteEl.value.trim();
+  const boostMsg = document.getElementById('boost-msg');
+  if (!text) {
+    boostMsg.textContent = 'Write a note first.';
+    boostMsg.style.color = '#e0577b';
+    setTimeout(() => { boostMsg.textContent = ''; }, 1800);
+    return;
+  }
+
+  const item = {
+    id: newBoostId(),
+    kind: 'quote',
+    text,
+    author: null,
+    source: 'pulse',
+    addedAt: new Date().toISOString()
+  };
+
+  try {
+    const params = new URLSearchParams({ userId: USER_ID, type: 'boost_item', data: JSON.stringify(item) });
+    await fetch(`${API_URL}?${params.toString()}`, { method: 'POST' });
+    boostMsg.textContent = 'Saved to Daily Boost';
+    boostMsg.style.color = '#2fa89a';
+  } catch (error) {
+    console.warn('Save as boost failed:', error);
+    boostMsg.textContent = 'Could not save — try again';
+    boostMsg.style.color = '#e0577b';
+  }
+  setTimeout(() => { boostMsg.textContent = ''; }, 1800);
+}
+
 const DIMS = [
   { key: 'mood', label: 'Mood', color: '#e0577b' },
   { key: 'energy', label: 'Energy', color: '#e0a83a' },
@@ -312,6 +349,7 @@ function renderAll() {
 renderSliders();
 timeLabel();
 document.getElementById('log-btn').addEventListener('click', logEntry);
+document.getElementById('boost-btn').addEventListener('click', saveNoteAsBoost);
 document.getElementById('export-btn').addEventListener('click', exportCsv);
 document.getElementById('import-btn').addEventListener('click', () => {
   document.getElementById('import-file').click();
